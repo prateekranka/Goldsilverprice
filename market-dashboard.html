@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Market Prices</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9963A;
+    --gold-light: #E8C87A;
+    --gold-pale: #F5E9C8;
+    --silver: #9BA5B4;
+    --silver-light: #CBD5E1;
+    --silver-pale: #EEF2F7;
+    --dark: #1A1612;
+    --mid: #3D3528;
+    --bg: #FAF7F2;
+    --card-bg: #FFFFFF;
+    --text: #2C2416;
+    --muted: #8C7B65;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    color: var(--text);
+  }
+  .top-bar {
+    height: 4px;
+    background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
+  }
+  .container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 28px 20px 48px;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 32px;
+    animation: fadeDown 0.6s ease both;
+  }
+  .header-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--dark);
+    line-height: 1.1;
+  }
+  .timestamp {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 300;
+  }
+  .card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+    animation: fadeUp 0.6s ease both;
+    position: relative;
+    overflow: hidden;
+  }
+  .card:nth-child(1) { animation-delay: 0.1s; }
+  .card:nth-child(2) { animation-delay: 0.2s; }
+  .card:nth-child(3) { animation-delay: 0.3s; }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px;
+    height: 100%;
+    border-radius: 16px 0 0 16px;
+  }
+  .card.gold-card::before { background: linear-gradient(180deg, var(--gold), var(--gold-light)); }
+  .card.silver-card::before { background: linear-gradient(180deg, var(--silver), var(--silver-light)); }
+  .card.fx-card::before { background: linear-gradient(180deg, #5B9BD5, #93C5FD); }
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .card-title { display: flex; align-items: center; gap: 10px; }
+  .metal-icon {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .gold-card .metal-icon { background: linear-gradient(135deg, var(--gold-pale), #EDD98A); }
+  .silver-card .metal-icon { background: linear-gradient(135deg, var(--silver-pale), #D1D9E0); }
+  .fx-card .metal-icon { background: linear-gradient(135deg, #EFF6FF, #BFDBFE); }
+  .metal-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 600;
+    color: var(--dark); line-height: 1;
+  }
+  .metal-sub { font-size: 11px; color: var(--muted); font-weight: 400; margin-top: 2px; }
+  .change-badge {
+    font-size: 12px; font-weight: 500;
+    padding: 4px 10px; border-radius: 20px;
+  }
+  .change-badge.up { background: #F0FDF4; color: #16A34A; }
+  .change-badge.down { background: #FEF2F2; color: #DC2626; }
+  .change-badge.flat { background: #F8F8F8; color: #888; }
+  .price-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .price-item {
+    background: var(--bg);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .price-label {
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 4px;
+  }
+  .price-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 700;
+    color: var(--dark); line-height: 1;
+  }
+  .price-unit { font-size: 11px; color: var(--muted); margin-top: 2px; font-weight: 300; }
+  .fx-price { text-align: center; padding: 8px 0 4px; }
+  .fx-price .big-rate {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 52px; font-weight: 700;
+    color: var(--dark); line-height: 1;
+  }
+  .fx-price .fx-label { font-size: 13px; color: var(--muted); margin-top: 6px; font-weight: 300; }
+  .gold-22k {
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: var(--bg);
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .gold-22k .price-label { margin: 0; }
+  .gold-22k .price-value { font-size: 18px; }
+  .refresh-btn {
+    display: block; width: 100%;
+    margin-top: 24px; padding: 15px;
+    background: var(--dark); color: #F5E9C8;
+    border: none; border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 500;
+    letter-spacing: 1px; text-transform: uppercase;
+    cursor: pointer; transition: all 0.2s ease;
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+  .refresh-btn:hover { background: var(--mid); transform: translateY(-1px); }
+  .refresh-btn:active { transform: translateY(0); }
+  .refresh-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .skeleton {
+    background: linear-gradient(90deg, #f0ebe3 25%, #faf7f2 50%, #f0ebe3 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 6px;
+    height: 22px; width: 80px;
+    display: inline-block;
+  }
+  .error-msg {
+    text-align: center; color: #DC2626;
+    font-size: 13px; padding: 12px;
+    background: #FEF2F2; border-radius: 10px; margin-top: 8px;
+  }
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .spinning { display: inline-block; animation: spin 1s linear infinite; }
+</style>
+</head>
+<body>
+<div class="top-bar"></div>
+<div class="container">
+  <header>
+    <div class="header-label">Live Prices</div>
+    <h1>Metals &amp; Currency</h1>
+    <div class="timestamp" id="timestamp">Fetching latest prices…</div>
+  </header>
+
+  <!-- Gold Card -->
+
+  <div class="card gold-card">
+    <div class="card-header">
+      <div class="card-title">
+        <div class="metal-icon">🥇</div>
+        <div>
+          <div class="metal-name">Gold</div>
+          <div class="metal-sub">24 Karat · INR</div>
+        </div>
+      </div>
+      <div class="change-badge flat" id="gold-change">—</div>
+    </div>
+    <div class="price-grid">
+      <div class="price-item">
+        <div class="price-label">Per Gram</div>
+        <div class="price-value" id="gold-gram"><span class="skeleton"></span></div>
+        <div class="price-unit">₹ / gram</div>
+      </div>
+      <div class="price-item">
+        <div class="price-label">Per Tola</div>
+        <div class="price-value" id="gold-tola"><span class="skeleton"></span></div>
+        <div class="price-unit">₹ / tola (11.66g)</div>
+      </div>
+    </div>
+    <div class="gold-22k">
+      <div class="price-label">22 Karat · Per Gram</div>
+      <div class="price-value" id="gold22-gram"><span class="skeleton"></span></div>
+    </div>
+  </div>
+
+  <!-- Silver Card -->
+
+  <div class="card silver-card">
+    <div class="card-header">
+      <div class="card-title">
+        <div class="metal-icon">🥈</div>
+        <div>
+          <div class="metal-name">Silver</div>
+          <div class="metal-sub">999 Fine · INR</div>
+        </div>
+      </div>
+      <div class="change-badge flat" id="silver-change">—</div>
+    </div>
+    <div class="price-grid">
+      <div class="price-item">
+        <div class="price-label">Per Gram</div>
+        <div class="price-value" id="silver-gram"><span class="skeleton"></span></div>
+        <div class="price-unit">₹ / gram</div>
+      </div>
+      <div class="price-item">
+        <div class="price-label">Per Tola</div>
+        <div class="price-value" id="silver-tola"><span class="skeleton"></span></div>
+        <div class="price-unit">₹ / tola (11.66g)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- USD/INR Card -->
+
+  <div class="card fx-card">
+    <div class="card-header">
+      <div class="card-title">
+        <div class="metal-icon">💵</div>
+        <div>
+          <div class="metal-name">USD / INR</div>
+          <div class="metal-sub">Exchange Rate</div>
+        </div>
+      </div>
+      <div class="change-badge flat" id="fx-change">—</div>
+    </div>
+    <div class="fx-price">
+      <div class="big-rate" id="fx-rate"><span class="skeleton" style="width:120px;height:48px;border-radius:8px;"></span></div>
+      <div class="fx-label">Rupees per 1 US Dollar</div>
+    </div>
+  </div>
+
+  <div id="error-container"></div>
+
+  <button class="refresh-btn" id="refresh-btn" onclick="fetchAll()">
+    ↻ &nbsp; Refresh Prices
+  </button>
+</div>
+
+<script>
+  const TOLA = 11.6638;
+  const TROY = 31.1035;
+
+  function fmt(n) {
+    return '₹' + Math.round(n).toLocaleString('en-IN');
+  }
+  function fmtDec(n) {
+    return '₹' + n.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  function setChange(elId, pct) {
+    const el = document.getElementById(elId);
+    if (pct === null || pct === undefined) { el.textContent = '—'; el.className = 'change-badge flat'; return; }
+    const sign = pct >= 0 ? '+' : '';
+    el.textContent = sign + Number(pct).toFixed(2) + '%';
+    el.className = 'change-badge ' + (pct > 0 ? 'up' : pct < 0 ? 'down' : 'flat');
+  }
+  function updateTimestamp() {
+    const now = new Date();
+    const ist = now.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hour12: true });
+    document.getElementById('timestamp').textContent = 'Updated ' + ist + ' IST';
+  }
+  function showError(msg) {
+    document.getElementById('error-container').innerHTML = '<div class="error-msg">⚠️ ' + msg + '</div>';
+  }
+
+  async function fetchAll() {
+    const btn = document.getElementById('refresh-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinning">↻</span> &nbsp; Refreshing…';
+    document.getElementById('error-container').innerHTML = '';
+
+    try {
+      const [goldRes, silverRes, fxRes] = await Promise.all([
+        fetch('https://api.gold-api.com/price/XAU'),
+        fetch('https://api.gold-api.com/price/XAG'),
+        fetch('https://api.exchangerate-api.com/v4/latest/USD')
+      ]);
+
+      if (!goldRes.ok || !silverRes.ok || !fxRes.ok) throw new Error('API error');
+
+      const gold = await goldRes.json();
+      const silver = await silverRes.json();
+      const fx = await fxRes.json();
+
+      const usdInr = fx.rates.INR;
+      const gold24PerGram = (gold.price / TROY) * usdInr;
+      const gold22PerGram = gold24PerGram * (22 / 24);
+      const silverPerGram = (silver.price / TROY) * usdInr;
+
+      document.getElementById('gold-gram').textContent = fmt(gold24PerGram);
+      document.getElementById('gold-tola').textContent = fmt(gold24PerGram * TOLA);
+      document.getElementById('gold22-gram').textContent = fmt(gold22PerGram);
+      setChange('gold-change', gold.change_percent);
+
+      document.getElementById('silver-gram').textContent = fmtDec(silverPerGram);
+      document.getElementById('silver-tola').textContent = fmt(silverPerGram * TOLA);
+      setChange('silver-change', silver.change_percent);
+
+      document.getElementById('fx-rate').textContent = usdInr.toFixed(2);
+
+      updateTimestamp();
+    } catch(e) {
+      showError('Could not fetch prices. Check your connection and try again.');
+      document.getElementById('timestamp').textContent = 'Last refresh failed';
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = '↻ &nbsp; Refresh Prices';
+  }
+
+  fetchAll();
+</script>
+
+</body>
+</html>
