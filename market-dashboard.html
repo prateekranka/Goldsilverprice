@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Market Prices</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
     --gold: #C9963A;
@@ -23,10 +23,11 @@
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Nunito', sans-serif;
     background: var(--bg);
     min-height: 100vh;
     color: var(--text);
+    -webkit-text-size-adjust: 100%;
   }
   .top-bar {
     height: 4px;
@@ -43,25 +44,25 @@
     animation: fadeDown 0.6s ease both;
   }
   .header-label {
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 3px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
     text-transform: uppercase;
     color: var(--gold);
     margin-bottom: 8px;
   }
   header h1 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 32px;
-    font-weight: 600;
+    font-family: 'Nunito', sans-serif;
+    font-size: 34px;
+    font-weight: 800;
     color: var(--dark);
     line-height: 1.1;
   }
   .timestamp {
     margin-top: 10px;
-    font-size: 12px;
+    font-size: 15px;
     color: var(--muted);
-    font-weight: 300;
+    font-weight: 600;
   }
   .card {
     background: var(--card-bg);
@@ -104,14 +105,14 @@
   .silver-card .metal-icon { background: linear-gradient(135deg, var(--silver-pale), #D1D9E0); }
   .fx-card .metal-icon { background: linear-gradient(135deg, #EFF6FF, #BFDBFE); }
   .metal-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 22px; font-weight: 600;
+    font-family: 'Nunito', sans-serif;
+    font-size: 26px; font-weight: 800;
     color: var(--dark); line-height: 1;
   }
-  .metal-sub { font-size: 11px; color: var(--muted); font-weight: 400; margin-top: 2px; }
+  .metal-sub { font-size: 14px; color: var(--muted); font-weight: 600; margin-top: 3px; }
   .change-badge {
-    font-size: 12px; font-weight: 500;
-    padding: 4px 10px; border-radius: 20px;
+    font-size: 15px; font-weight: 700;
+    padding: 6px 12px; border-radius: 20px;
   }
   .change-badge.up { background: #F0FDF4; color: #16A34A; }
   .change-badge.down { background: #FEF2F2; color: #DC2626; }
@@ -127,23 +128,23 @@
     padding: 12px 14px;
   }
   .price-label {
-    font-size: 10px; font-weight: 500;
-    letter-spacing: 1.5px; text-transform: uppercase;
-    color: var(--muted); margin-bottom: 4px;
+    font-size: 13px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 6px;
   }
   .price-value {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 22px; font-weight: 700;
+    font-family: 'Nunito', sans-serif;
+    font-size: 28px; font-weight: 800;
     color: var(--dark); line-height: 1;
   }
-  .price-unit { font-size: 11px; color: var(--muted); margin-top: 2px; font-weight: 300; }
+  .price-unit { font-size: 13px; color: var(--muted); margin-top: 4px; font-weight: 600; }
   .fx-price { text-align: center; padding: 8px 0 4px; }
   .fx-price .big-rate {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 52px; font-weight: 700;
+    font-family: 'Nunito', sans-serif;
+    font-size: 64px; font-weight: 800;
     color: var(--dark); line-height: 1;
   }
-  .fx-price .fx-label { font-size: 13px; color: var(--muted); margin-top: 6px; font-weight: 300; }
+  .fx-price .fx-label { font-size: 16px; color: var(--muted); margin-top: 8px; font-weight: 600; }
   .gold-22k {
     margin-top: 12px;
     padding: 10px 14px;
@@ -154,14 +155,14 @@
     align-items: center;
   }
   .gold-22k .price-label { margin: 0; }
-  .gold-22k .price-value { font-size: 18px; }
+  .gold-22k .price-value { font-size: 24px; }
   .refresh-btn {
     display: block; width: 100%;
-    margin-top: 24px; padding: 15px;
+    margin-top: 24px; padding: 18px;
     background: var(--dark); color: #F5E9C8;
     border: none; border-radius: 12px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px; font-weight: 500;
+    font-family: 'Nunito', sans-serif;
+    font-size: 17px; font-weight: 700;
     letter-spacing: 1px; text-transform: uppercase;
     cursor: pointer; transition: all 0.2s ease;
     animation: fadeUp 0.6s 0.4s ease both;
@@ -179,8 +180,8 @@
   }
   .error-msg {
     text-align: center; color: #DC2626;
-    font-size: 13px; padding: 12px;
-    background: #FEF2F2; border-radius: 10px; margin-top: 8px;
+    font-size: 16px; padding: 14px;
+    background: #FEF2F2; border-radius: 10px; margin-top: 8px; font-weight: 600;
   }
   @keyframes fadeDown {
     from { opacity: 0; transform: translateY(-16px); }
